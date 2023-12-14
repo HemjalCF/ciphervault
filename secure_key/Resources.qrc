@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>login.jpg</file>
+        <file>login_f.jpg</file>
+        <file>main.jpeg</file>
+        <file>open.png</file>
+        <file>lock.jpg</file>
+    </qresource>
+</RCC>
