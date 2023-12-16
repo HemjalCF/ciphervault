@@ -1,5 +1,6 @@
 #include "key.hh"
 #include "ui_key.h"
+#include "register.hh"
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
@@ -18,9 +19,11 @@ Key::Key(QWidget *parent)
     QString filename = "Data.txt";
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
-        QTextStream stream(&file);
-        stream << "something\n";
+        QTextStream out(&file);
+        out << "uame:hemjal\n";
+        out <<"password:khan\n";
     }
+    file.flush();
     file.close();
 
 }
@@ -33,6 +36,45 @@ Key::~Key()
 
 void Key::check_login()
 {
-    qDebug()<<"clicked\n";
+    bool found_username = false, found_password = false;
+    QString username_key_text = "username:";
+    QString password_key_text = "password:";
+
+    QFile file("Data.txt");
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        qsizetype found_u = line.lastIndexOf(username_key_text);
+        qsizetype found_p = line.lastIndexOf(password_key_text);
+        if(found_u != -1) {
+            QString username= line.mid(username_key_text.size());
+            found_username = true;
+            qDebug() << username;
+        }
+        if(found_p != -1) {
+            QString password= line.mid(username_key_text.size());
+            found_password = true;
+            qDebug() << password;
+        }
+
+       // qDebug()<<line;
+    }
+    file.close();
+
+    if(not found_username)
+    {
+        qDebug()<< "username not found!";
+        this->hide();
+        Register r;
+        r.setModal(true);
+        r.exec();
+    }
+    else if (not found_password){
+        qDebug()<< "Password not found!";
+    }
 }
 
