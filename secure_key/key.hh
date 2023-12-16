@@ -26,6 +26,8 @@ private:
     Ui::Key *ui;
     QString filename = "Data.txt";
     void check_login(void);
+    void show_register_user_ui(void);
+    void show_login_user_ui(void);
     void register_user(void);
 
 };

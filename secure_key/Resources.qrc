@@ -5,5 +5,8 @@
         <file>main.jpeg</file>
         <file>open.png</file>
         <file>lock.jpg</file>
+        <file>.gitignore</file>
+        <file>to_left.png</file>
+        <file>to_right.png</file>
     </qresource>
 </RCC>

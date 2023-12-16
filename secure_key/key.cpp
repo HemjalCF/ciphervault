@@ -9,17 +9,19 @@ Key::Key(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->pushButton_login,&QPushButton::clicked,this,&Key::check_login);
-    connect(ui->pushButton_register, &QPushButton::clicked, this, &Key::register_user);
+    connect(ui->pushButton_register, &QPushButton::clicked,this,&Key::show_register_user_ui);
+    connect(ui->pushButton_reg_insert, &QPushButton::clicked,this,&Key::register_user);
+    connect(ui->pushButton_goto_reg, &QPushButton::clicked,this,&Key::show_register_user_ui);
+    connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
 
-
-    QFile file(filename);
-    if (file.open(QIODevice::ReadWrite)) {
-        QTextStream out(&file);
-        out << "username:hemjal\n";
-        out <<"password:khan\n";
-    }
-    file.flush();
-    file.close();
+//    QFile file(filename);
+//    if (file.open(QIODevice::ReadWrite)) {
+//        QTextStream out(&file);
+//        out << "ername:hemjal\n";
+//        out <<"password:khan\n";
+//    }
+//    file.flush();
+//    file.close();
 
 }
 
@@ -62,13 +64,11 @@ void Key::check_login()
     if(not found_username)
     {
         qDebug()<< "username not found!";
-        this->hide();
-        Register r;
-        r.setModal(true);
-        r.exec();
+        ui->label_info->setText("User not found!");
     }
     else if (not found_password){
         qDebug()<< "Password not found!";
+        ui->label_info->setText("Incorrect Password!");
     }
     else {
 
@@ -77,19 +77,32 @@ void Key::check_login()
 
 }
 
-void Key::register_user()
+void Key::show_register_user_ui()
 {
     ui->stackedWidget->setCurrentWidget(ui->page_register_user);
+}
+
+void Key::show_login_user_ui()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page);
+}
+
+void Key::register_user()
+{
+    QString user_full_name = ui->lineEdit_full_name->text();
+    QString user_username = ui->lineEdit_username->text();
+    QString user_password = ui->lineEdit_password->text();
+    qDebug()<< "Entered User Full Name:" << user_full_name;
+    qDebug()<< "Entered Username:" << user_username;
+    qDebug()<< "Entered Password:" << user_password;
     QFile file(filename);
-    if (file.open(QIODevice::ReadWrite)) {
-        file.flush();
+    if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets remove evrything in the file
         QTextStream out(&file);
-       // out << "username:hemjal\n";
-       // out <<"password:khan\n";
+        out << "userfullname:"+ user_full_name + "\n";
+        out << "username:"+ user_username + "\n";
+        out << "password:"+ user_password + "\n";
     }
     file.flush();
     file.close();
-
-
 }
 
