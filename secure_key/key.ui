@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>643</width>
-    <height>487</height>
+    <width>634</width>
+    <height>447</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Key</string>
@@ -17,33 +23,20 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>CipherVault</string>
-    </property>
-   </widget>
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>40</y>
+      <x>0</x>
+      <y>0</y>
       <width>631</width>
-      <height>391</height>
+      <height>431</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true"/>
@@ -129,29 +122,6 @@
       </widget>
       <widget class="QLineEdit" name="lineEdit"/>
      </widget>
-     <widget class="QPushButton" name="pushButton_register">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>310</y>
-        <width>91</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-        <bold>true</bold>
-        <strikeout>false</strikeout>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border: none;</string>
-      </property>
-      <property name="text">
-       <string> Register</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_info">
       <property name="geometry">
        <rect>
@@ -171,70 +141,76 @@
        <string/>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_goto_reg">
+     <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>310</y>
-        <width>51</width>
-        <height>41</height>
+        <y>80</y>
+        <width>121</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">border: none;</string>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
-       <string/>
+       <string>CipherVault</string>
       </property>
-      <property name="icon">
-       <iconset resource="Resources.qrc">
-        <normaloff>:/res/to_right.png</normaloff>:/res/to_right.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>30</width>
+     </widget>
+     <widget class="QSplitter" name="splitter_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>340</y>
+        <width>115</width>
         <height>30</height>
-       </size>
+       </rect>
       </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QPushButton" name="pushButton_register">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <bold>true</bold>
+         <strikeout>false</strikeout>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: none;</string>
+       </property>
+       <property name="text">
+        <string> Register</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_goto_reg">
+       <property name="styleSheet">
+        <string notr="true">border: none;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="Resources.qrc">
+         <normaloff>:/res/to_right.png</normaloff>:/res/to_right.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="page_register_user">
      <property name="styleSheet">
       <string notr="true">background-image: url(:/res/lock.jpg);</string>
      </property>
-     <widget class="QLineEdit" name="lineEdit_password">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>120</y>
-        <width>161</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_full_name">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>60</y>
-        <width>161</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>60</y>
-        <width>81</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Full Name :</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
@@ -255,34 +231,11 @@
        <string>Registration Form</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_username">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>90</y>
-        <width>161</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>120</y>
-        <width>81</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Password :</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton_reg_insert">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>150</y>
+        <x>470</x>
+        <y>140</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -291,26 +244,13 @@
        <string>Register</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>90</y>
-        <width>81</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Username :</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_reg_info">
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>270</y>
+        <y>260</y>
         <width>201</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
@@ -327,7 +267,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border: none;</string>
+       <string notr="true">border: 3px;</string>
       </property>
       <property name="text">
        <string/>
@@ -343,6 +283,84 @@
        </size>
       </property>
      </widget>
+     <widget class="QCommandLinkButton" name="commandLinkButton_to_login">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>350</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-image: none;</string>
+      </property>
+      <property name="text">
+       <string>Go to Login</string>
+      </property>
+     </widget>
+     <widget class="QSplitter" name="splitter_4">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>50</y>
+        <width>218</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Full Name :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_full_name"/>
+     </widget>
+     <widget class="QSplitter" name="splitter_5">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>80</y>
+        <width>219</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Username :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_username"/>
+     </widget>
+     <widget class="QSplitter" name="splitter_6">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>110</y>
+        <width>215</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Password :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_password"/>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -351,7 +369,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>643</width>
+     <width>634</width>
      <height>22</height>
     </rect>
    </property>

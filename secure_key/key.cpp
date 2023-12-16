@@ -1,7 +1,5 @@
 #include "key.hh"
 #include "ui_key.h"
-#include "register.hh"
-
 
 Key::Key(QWidget *parent)
     : QMainWindow(parent)
@@ -13,16 +11,23 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_reg_insert, &QPushButton::clicked,this,&Key::register_user);
     connect(ui->pushButton_goto_reg, &QPushButton::clicked,this,&Key::show_register_user_ui);
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
+    connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
 
-//    QFile file(filename);
-//    if (file.open(QIODevice::ReadWrite)) {
-//        QTextStream out(&file);
-//        out << "ername:hemjal\n";
-//        out <<"password:khan\n";
-//    }
-//    file.flush();
-//    file.close();
+    const unsigned char key[17] = "0123456789abcdef"; // 16-byte key for AES-128
+    const unsigned char plaintext[12] = "Hello, AES!";
+    unsigned char ciphertext[AES_BLOCK_SIZE];
+    unsigned char decryptedText[AES_BLOCK_SIZE];
 
+    aes128.encryptAES(plaintext, key, ciphertext);
+    aes128.decryptAES(ciphertext, key, decryptedText);
+
+    std::cout << "Original Text: " << plaintext << std::endl;
+    std::cout << "Encrypted Text: ";
+    for (int i = 0; i < AES_BLOCK_SIZE; ++i)
+        std::cout << std::hex << (int)ciphertext[i];
+    std::cout << std::endl;
+
+    std::cout << "Decrypted Text: " << decryptedText << std::endl;
 }
 
 
@@ -104,5 +109,9 @@ void Key::register_user()
     }
     file.flush();
     file.close();
+    ui->label_reg_info->setText("Registration Successful!");
+    ui->lineEdit_full_name->clear();
+    ui->lineEdit_username->clear();
+    ui->lineEdit_password->clear();
 }
 

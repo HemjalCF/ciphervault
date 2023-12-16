@@ -11,17 +11,16 @@ CONFIG += c++17
 LIBS += -L/usr/lib -lssl -lcrypto
 
 SOURCES += \
+    aes128.cpp \
     main.cpp \
-    key.cpp \
-    register.cpp
+    key.cpp
 
 HEADERS += \
-    key.hh \
-    register.hh
+    aes128.hh \
+    key.hh
 
 FORMS += \
-    key.ui \
-    register.ui
+    key.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
