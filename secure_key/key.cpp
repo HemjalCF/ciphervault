@@ -1,13 +1,7 @@
 #include "key.hh"
 #include "ui_key.h"
 #include "register.hh"
-#include <QDebug>
-#include <QFile>
-#include <QTextStream>
-#include <openssl/aes.h>
-#include <openssl/rand.h>
-#include <iostream>
-#include <cstring>
+
 
 Key::Key(QWidget *parent)
     : QMainWindow(parent)
@@ -15,12 +9,13 @@ Key::Key(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->pushButton_login,&QPushButton::clicked,this,&Key::check_login);
+    connect(ui->pushButton_register, &QPushButton::clicked, this, &Key::register_user);
 
-    QString filename = "Data.txt";
+
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream out(&file);
-        out << "uame:hemjal\n";
+        out << "username:hemjal\n";
         out <<"password:khan\n";
     }
     file.flush();
@@ -40,8 +35,7 @@ void Key::check_login()
     QString username_key_text = "username:";
     QString password_key_text = "password:";
 
-    QFile file("Data.txt");
-
+    QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
@@ -76,5 +70,26 @@ void Key::check_login()
     else if (not found_password){
         qDebug()<< "Password not found!";
     }
+    else {
+
+        ui->label_info->setText("Verified user!");
+    }
+
+}
+
+void Key::register_user()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_register_user);
+    QFile file(filename);
+    if (file.open(QIODevice::ReadWrite)) {
+        file.flush();
+        QTextStream out(&file);
+       // out << "username:hemjal\n";
+       // out <<"password:khan\n";
+    }
+    file.flush();
+    file.close();
+
+
 }
 
