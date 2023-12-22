@@ -41,6 +41,11 @@ void Key::check_login()
     bool found_username = false, found_password = false;
     QString username_key_text = "username:";
     QString password_key_text = "password:";
+    QString stored_username="",stored_password="";
+    QString username_entered = ui->lineEdit_user_name_entered->text();
+    QString password_entered = ui->lineEdit_password_entered->text();
+    //qDebug()<<username_entered<<" and "<<password_entered;
+
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -52,14 +57,14 @@ void Key::check_login()
         qsizetype found_u = line.lastIndexOf(username_key_text);
         qsizetype found_p = line.lastIndexOf(password_key_text);
         if(found_u != -1) {
-            QString username= line.mid(username_key_text.size());
+            stored_username= line.mid(username_key_text.size());
             found_username = true;
-            qDebug() << username;
+            qDebug() << stored_username;
         }
         if(found_p != -1) {
-            QString password= line.mid(username_key_text.size());
+            stored_password= line.mid(username_key_text.size());
             found_password = true;
-            qDebug() << password;
+            qDebug() << stored_password;
         }
 
        // qDebug()<<line;
@@ -69,17 +74,25 @@ void Key::check_login()
     if(not found_username)
     {
         qDebug()<< "username not found!";
-        ui->label_info->setText("User not found!");
+        ui->label_info->setText("No user found!");
     }
     else if (not found_password){
         qDebug()<< "Password not found!";
-        ui->label_info->setText("Incorrect Password!");
+        ui->label_info->setText("No user found!");
     }
     else {
+        if(stored_username == username_entered){
 
-        ui->label_info->setText("Verified user!");
+            if(stored_password == password_entered){
+
+                ui->label_info->setText("Verified user!");
+                ui->lineEdit_user_name_entered->clear();
+                ui->lineEdit_password_entered->clear();
+            }
+            else ui->label_info->setText("Wrong Password!");
+        }
+        else  ui->label_info->setText("Username Not found!");
     }
-
 }
 
 void Key::show_register_user_ui()
