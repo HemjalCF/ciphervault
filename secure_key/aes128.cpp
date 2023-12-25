@@ -8,7 +8,7 @@ AES128::AES128()
 static void str_to_char(std::string in_str, unsigned char *out_char){
 
     std::copy(in_str.cbegin(), in_str.cend(), out_char);
-   // std::cout <<"Conv str to char "<< out_char << '\n';
+    // std::cout <<"Conv str to char "<< out_char << '\n';
 }
 
 static unsigned char parse_hex(char c)

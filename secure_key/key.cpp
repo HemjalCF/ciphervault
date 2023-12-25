@@ -13,14 +13,14 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
 
-//    Test code
-//    std::string test = "My name is Khan";
-//    std::string res="";
-//    aes128.encryptAES(test,res);
-//    std::cout << "E Text: "<<res<<std::endl;
-//    std::string de_res="";
-//    aes128.decryptAES(res, de_res);
-//    std::cout << "D Text: " << de_res << std::endl;
+    //    Test code
+    //    std::string test = "My name is Khan";
+    //    std::string res="";
+    //    aes128.encryptAES(test,res);
+    //    std::cout << "E Text: "<<res<<std::endl;
+    //    std::string de_res="";
+    //    aes128.decryptAES(res, de_res);
+    //    std::cout << "D Text: " << de_res << std::endl;
 }
 
 
@@ -60,7 +60,7 @@ void Key::check_login()
             qDebug() << stored_password;
         }
 
-       // qDebug()<<line;
+        // qDebug()<<line;
     }
     file.close();
 
@@ -135,4 +135,3 @@ void Key::register_user()
     ui->lineEdit_username->clear();
     ui->lineEdit_password->clear();
 }
-
