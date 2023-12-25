@@ -3,14 +3,18 @@
 #include <openssl/aes.h>
 #include <openssl/rand.h>
 #include <iostream>
-#include <cstring>
+#include <string>
+#include <sstream>
+#include <iomanip>
+
 
 class AES128
 {
 public:
     AES128();
-    void encryptAES(const unsigned char *plaintext, const unsigned char *key, unsigned char *ciphertext);
-    void decryptAES(const unsigned char *ciphertext, const unsigned char *key, unsigned char *decryptedText);
+    const unsigned char cypher_key[17] = "fdt34xdrftaslpoj"; // 16-byte key for AES-128
+    void encryptAES(const std::string plaintext, std::string &ciphertext);
+    void decryptAES(const std::string ciphertext, std::string &decryptedText);
 };
 
 #endif // AES128_HH

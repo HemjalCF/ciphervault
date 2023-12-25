@@ -13,21 +13,14 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
 
-    const unsigned char key[17] = "0123456789abcdef"; // 16-byte key for AES-128
-    const unsigned char plaintext[12] = "Hello, AES!";
-    unsigned char ciphertext[AES_BLOCK_SIZE];
-    unsigned char decryptedText[AES_BLOCK_SIZE];
-
-    aes128.encryptAES(plaintext, key, ciphertext);
-    aes128.decryptAES(ciphertext, key, decryptedText);
-
-    std::cout << "Original Text: " << plaintext << std::endl;
-    std::cout << "Encrypted Text: ";
-    for (int i = 0; i < AES_BLOCK_SIZE; ++i)
-        std::cout << std::hex << (int)ciphertext[i];
-    std::cout << std::endl;
-
-    std::cout << "Decrypted Text: " << decryptedText << std::endl;
+//    Test code
+//    std::string test = "My name is Khan";
+//    std::string res="";
+//    aes128.encryptAES(test,res);
+//    std::cout << "E Text: "<<res<<std::endl;
+//    std::string de_res="";
+//    aes128.decryptAES(res, de_res);
+//    std::cout << "D Text: " << de_res << std::endl;
 }
 
 
@@ -116,9 +109,24 @@ void Key::register_user()
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets remove evrything in the file
         QTextStream out(&file);
-        out << "userfullname:"+ user_full_name + "\n";
-        out << "username:"+ user_username + "\n";
-        out << "password:"+ user_password + "\n";
+        std::string u_f_name_p_t = user_full_name.toStdString();
+        std::string u_f_name_c_t;
+        aes128.encryptAES(u_f_name_p_t, u_f_name_c_t);
+        std::cout<< "Saving: u f name: " << u_f_name_c_t;
+        out << "userfullname:"+ QString::fromUtf8(u_f_name_c_t.c_str()) + "\n";
+
+        std::string u_name_p_t =  user_username.toStdString();
+        std::string u_name_c_t;
+        aes128.encryptAES(u_name_p_t, u_name_c_t);
+        std::cout<< "Saving: u name: " << u_name_c_t;
+        out << "username:"+ QString::fromUtf8(u_name_c_t.c_str()) + "\n";
+
+        std::string u_pass_p_t = user_password.toStdString();
+        std::string u_pass_c_t;
+        aes128.encryptAES(u_pass_p_t, u_pass_c_t);
+        std::cout<< "Saving: u pass: " << u_pass_c_t;
+        out << "password:"+ QString::fromUtf8(u_pass_c_t.c_str()) + "\n";
+        qDebug()<< "******* Reg completed *********";
     }
     file.flush();
     file.close();
