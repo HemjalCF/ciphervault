@@ -13,14 +13,14 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
 
-    //    Test code
-    //    std::string test = "My name is Khan";
-    //    std::string res="";
-    //    aes128.encryptAES(test,res);
-    //    std::cout << "E Text: "<<res<<std::endl;
-    //    std::string de_res="";
-    //    aes128.decryptAES(res, de_res);
-    //    std::cout << "D Text: " << de_res << std::endl;
+       // Test code
+//        std::string test = "Test x";
+//        std::string res="";
+//        aes128.encryptAES(test,res);
+//        std::cout << "E Text: "<<res<<std::endl;
+//        std::string de_res="";
+//        aes128.decryptAES(res, de_res);
+//        std::cout << "D Text: " << de_res << std::endl;
 }
 
 
@@ -37,7 +37,7 @@ void Key::check_login()
     QString stored_username="",stored_password="";
     QString username_entered = ui->lineEdit_user_name_entered->text();
     QString password_entered = ui->lineEdit_password_entered->text();
-    //qDebug()<<username_entered<<" and "<<password_entered;
+    qDebug()<<username_entered<<" and "<<password_entered;
 
 
     QFile file(filename);
@@ -52,11 +52,22 @@ void Key::check_login()
         if(found_u != -1) {
             stored_username= line.mid(username_key_text.size());
             found_username = true;
+            std::string stored_username_c_t = stored_username.toStdString();
+            std::cout << "E Text: " << stored_username_c_t << std::endl;
+            std::string stored_username_p_t = "";
+            aes128.decryptAES(stored_username_c_t, stored_username_p_t);
+            std::cout << "D Text: " << stored_username_p_t << std::endl;
+            stored_username = QString::fromUtf8(stored_username_p_t.c_str());
             qDebug() << stored_username;
         }
         if(found_p != -1) {
             stored_password= line.mid(username_key_text.size());
             found_password = true;
+            std::string stored_password_c_t = stored_password.toStdString();
+            std::cout << "E Pass: " << stored_password_c_t << std::endl;
+            std::string stored_password_p_t = "";
+            aes128.decryptAES(stored_password_c_t, stored_password_p_t);
+            stored_password = QString::fromUtf8(stored_password_p_t.c_str());
             qDebug() << stored_password;
         }
 
@@ -75,9 +86,7 @@ void Key::check_login()
     }
     else {
         if(stored_username == username_entered){
-
             if(stored_password == password_entered){
-
                 ui->label_info->setText("Verified user!");
                 ui->lineEdit_user_name_entered->clear();
                 ui->lineEdit_password_entered->clear();
@@ -112,19 +121,19 @@ void Key::register_user()
         std::string u_f_name_p_t = user_full_name.toStdString();
         std::string u_f_name_c_t;
         aes128.encryptAES(u_f_name_p_t, u_f_name_c_t);
-        std::cout<< "Saving: u f name: " << u_f_name_c_t;
+        qDebug()<< "Saving: u f name: " << QString::fromUtf8(u_f_name_c_t.c_str());
         out << "userfullname:"+ QString::fromUtf8(u_f_name_c_t.c_str()) + "\n";
 
         std::string u_name_p_t =  user_username.toStdString();
         std::string u_name_c_t;
         aes128.encryptAES(u_name_p_t, u_name_c_t);
-        std::cout<< "Saving: u name: " << u_name_c_t;
+        qDebug()<< "Saving: u name: " << QString::fromUtf8(u_name_c_t.c_str());
         out << "username:"+ QString::fromUtf8(u_name_c_t.c_str()) + "\n";
 
         std::string u_pass_p_t = user_password.toStdString();
         std::string u_pass_c_t;
         aes128.encryptAES(u_pass_p_t, u_pass_c_t);
-        std::cout<< "Saving: u pass: " << u_pass_c_t;
+        qDebug()<< "Saving: u pass: " << QString::fromUtf8(u_pass_c_t.c_str());
         out << "password:"+ QString::fromUtf8(u_pass_c_t.c_str()) + "\n";
         qDebug()<< "******* Reg completed *********";
     }

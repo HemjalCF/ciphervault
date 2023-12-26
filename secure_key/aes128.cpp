@@ -29,11 +29,12 @@ void AES128::encryptAES(const std::string plaintext, std::string &ciphertext)
 {
     AES_KEY aesKey;
     AES_set_encrypt_key(cypher_key, 128, &aesKey);
-    unsigned char plain_text_char[(sizeof(plaintext)/4)+1];
+    unsigned char plain_text_char[plaintext.length()+1];
+   // std::cout <<"Size "<< plaintext.length() <<" and "<<sizeof(plain_text_char)<< '\n';
     str_to_char(plaintext,plain_text_char);
     unsigned char ciphertext_c[AES_BLOCK_SIZE];
-    std::stringstream ss;
     AES_encrypt(plain_text_char, ciphertext_c, &aesKey);
+    std::stringstream ss;
     for (int i = 0; i < AES_BLOCK_SIZE; ++i){
         ss << std::hex << std::setw(2) << std::setfill('0') <<(int)ciphertext_c[i];
     }
@@ -52,14 +53,17 @@ void AES128::decryptAES(const std::string ciphertext, std::string &decryptedText
 {
     AES_KEY aesKey;
     AES_set_decrypt_key(cypher_key, 128, &aesKey);
-    unsigned char test[AES_BLOCK_SIZE];
+    unsigned char ciphertext_u_char[AES_BLOCK_SIZE];
     unsigned char decryptedText_c[AES_BLOCK_SIZE];
     for (std::size_t i = 0; i != ciphertext.size() / 2; ++i)
-        test[i] = 16 * parse_hex(ciphertext[2 * i]) + parse_hex(ciphertext[2 * i + 1]);
-    AES_decrypt(test, decryptedText_c, &aesKey);
+        ciphertext_u_char[i] = 16 * parse_hex(ciphertext[2 * i]) + parse_hex(ciphertext[2 * i + 1]);
+    AES_decrypt(ciphertext_u_char, decryptedText_c, &aesKey);
     std::stringstream ss;
-    for (int i = 0; i < AES_BLOCK_SIZE; ++i)
+    for (size_t i = 0; i <sizeof(decryptedText_c); ++i)
+    {
+        if(decryptedText_c[i] == '\0' || decryptedText_c[i] == '\n') break;
         ss << decryptedText_c[i];
+    }
     decryptedText = ss.str();
     //std::cout <<"Returning D Text: "<< decryptedText << '\n';
 }
