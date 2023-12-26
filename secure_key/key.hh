@@ -23,11 +23,17 @@ public:
 
 private:
     Ui::Key *ui;
+    #define USERNAME_MAX_SIZE 15
+    #define USERNAME_MIN_SIZE 6
+    #define PASSWORD_MAX_SIZE 15
+    #define PASSWORD_MIN_SIZE 6
+
     QString filename = "Data.txt";
     void check_login(void);
     void show_register_user_ui(void);
     void show_login_user_ui(void);
     void register_user(void);
+    void test_aes128_algorithm(void);
 
     AES128 aes128;
 

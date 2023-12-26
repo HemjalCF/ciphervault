@@ -12,15 +12,7 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_goto_reg, &QPushButton::clicked,this,&Key::show_register_user_ui);
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
-
-       // Test code
-//        std::string test = "Test x";
-//        std::string res="";
-//        aes128.encryptAES(test,res);
-//        std::cout << "E Text: "<<res<<std::endl;
-//        std::string de_res="";
-//        aes128.decryptAES(res, de_res);
-//        std::cout << "D Text: " << de_res << std::endl;
+    //test_aes128_algorithm();
 }
 
 
@@ -115,32 +107,57 @@ void Key::register_user()
     qDebug()<< "Entered User Full Name:" << user_full_name;
     qDebug()<< "Entered Username:" << user_username;
     qDebug()<< "Entered Password:" << user_password;
-    QFile file(filename);
-    if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets remove evrything in the file
-        QTextStream out(&file);
-        std::string u_f_name_p_t = user_full_name.toStdString();
-        std::string u_f_name_c_t;
-        aes128.encryptAES(u_f_name_p_t, u_f_name_c_t);
-        qDebug()<< "Saving: u f name: " << QString::fromUtf8(u_f_name_c_t.c_str());
-        out << "userfullname:"+ QString::fromUtf8(u_f_name_c_t.c_str()) + "\n";
 
-        std::string u_name_p_t =  user_username.toStdString();
-        std::string u_name_c_t;
-        aes128.encryptAES(u_name_p_t, u_name_c_t);
-        qDebug()<< "Saving: u name: " << QString::fromUtf8(u_name_c_t.c_str());
-        out << "username:"+ QString::fromUtf8(u_name_c_t.c_str()) + "\n";
-
-        std::string u_pass_p_t = user_password.toStdString();
-        std::string u_pass_c_t;
-        aes128.encryptAES(u_pass_p_t, u_pass_c_t);
-        qDebug()<< "Saving: u pass: " << QString::fromUtf8(u_pass_c_t.c_str());
-        out << "password:"+ QString::fromUtf8(u_pass_c_t.c_str()) + "\n";
-        qDebug()<< "******* Reg completed *********";
+    if(user_username.length() < USERNAME_MIN_SIZE || \
+        user_password.length() < PASSWORD_MIN_SIZE){
+        ui->label_reg_info->setText("Username or Password too short!");
     }
-    file.flush();
-    file.close();
-    ui->label_reg_info->setText("Registration Successful!");
-    ui->lineEdit_full_name->clear();
-    ui->lineEdit_username->clear();
-    ui->lineEdit_password->clear();
+    else if(user_username.length() > USERNAME_MAX_SIZE || \
+               user_password.length() > PASSWORD_MAX_SIZE)
+    {
+        ui->label_reg_info->setText("Username or Password too big!");
+    }
+    else{
+        QFile file(filename);
+        if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets remove evrything in the file
+            QTextStream out(&file);
+            std::string u_f_name_p_t = user_full_name.toStdString();
+            std::string u_f_name_c_t;
+            aes128.encryptAES(u_f_name_p_t, u_f_name_c_t);
+            qDebug()<< "Saving: u f name: " << QString::fromUtf8(u_f_name_c_t.c_str());
+            out << "userfullname:"+ QString::fromUtf8(u_f_name_c_t.c_str()) + "\n";
+
+            std::string u_name_p_t =  user_username.toStdString();
+            std::string u_name_c_t;
+            aes128.encryptAES(u_name_p_t, u_name_c_t);
+            qDebug()<< "Saving: u name: " << QString::fromUtf8(u_name_c_t.c_str());
+            out << "username:"+ QString::fromUtf8(u_name_c_t.c_str()) + "\n";
+
+            std::string u_pass_p_t = user_password.toStdString();
+            std::string u_pass_c_t;
+            aes128.encryptAES(u_pass_p_t, u_pass_c_t);
+            qDebug()<< "Saving: u pass: " << QString::fromUtf8(u_pass_c_t.c_str());
+            out << "password:"+ QString::fromUtf8(u_pass_c_t.c_str()) + "\n";
+            qDebug()<< "******* Reg completed *********";
+        }
+        file.flush();
+        file.close();
+        ui->label_reg_info->setText("Registration Successful!");
+        ui->lineEdit_full_name->clear();
+        ui->lineEdit_username->clear();
+        ui->lineEdit_password->clear();
+    }
+}
+
+// Test code for checking encryption algorithm
+
+void Key::test_aes128_algorithm()
+{
+    std::string test = "Test x";
+    std::string res="";
+    aes128.encryptAES(test,res);
+    std::cout << "E Text: "<<res<<std::endl;
+    std::string de_res="";
+    aes128.decryptAES(res, de_res);
+    std::cout << "D Text: " << de_res << std::endl;
 }

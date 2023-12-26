@@ -4,6 +4,7 @@
 #include <openssl/rand.h>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sstream>
 #include <iomanip>
 

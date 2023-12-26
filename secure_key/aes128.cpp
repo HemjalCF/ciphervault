@@ -55,13 +55,14 @@ void AES128::decryptAES(const std::string ciphertext, std::string &decryptedText
     AES_set_decrypt_key(cypher_key, 128, &aesKey);
     unsigned char ciphertext_u_char[AES_BLOCK_SIZE];
     unsigned char decryptedText_c[AES_BLOCK_SIZE];
+    std::memset(decryptedText_c,'\0',sizeof(decryptedText_c));
     for (std::size_t i = 0; i != ciphertext.size() / 2; ++i)
         ciphertext_u_char[i] = 16 * parse_hex(ciphertext[2 * i]) + parse_hex(ciphertext[2 * i + 1]);
     AES_decrypt(ciphertext_u_char, decryptedText_c, &aesKey);
     std::stringstream ss;
     for (size_t i = 0; i <sizeof(decryptedText_c); ++i)
     {
-        if(decryptedText_c[i] == '\0' || decryptedText_c[i] == '\n') break;
+        if(decryptedText_c[i] < 33 || decryptedText_c[i] > 126) break;
         ss << decryptedText_c[i];
     }
     decryptedText = ss.str();

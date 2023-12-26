@@ -247,9 +247,9 @@
      <widget class="QLabel" name="label_reg_info">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>260</y>
-        <width>201</width>
+        <x>350</x>
+        <y>250</y>
+        <width>271</width>
         <height>21</height>
        </rect>
       </property>
