@@ -35,6 +35,8 @@ private:
     void register_user(void);
     void test_aes128_algorithm(void);
 
+    void save_id_passwords(void);
+
     AES128 aes128;
 
 };

@@ -12,7 +12,14 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_goto_reg, &QPushButton::clicked,this,&Key::show_register_user_ui);
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
+
     //test_aes128_algorithm();
+
+    // save webadress, id and pasword page
+
+    connect(ui->pushButton_save, &QCommandLinkButton::clicked,this,&Key::save_id_passwords);
+
+
 }
 
 
@@ -82,6 +89,7 @@ void Key::check_login()
                 ui->label_info->setText("Verified user!");
                 ui->lineEdit_user_name_entered->clear();
                 ui->lineEdit_password_entered->clear();
+                ui->stackedWidget->setCurrentWidget(ui->page_save_password);
             }
             else ui->label_info->setText("Wrong Password!");
         }
@@ -160,4 +168,12 @@ void Key::test_aes128_algorithm()
     std::string de_res="";
     aes128.decryptAES(res, de_res);
     std::cout << "D Text: " << de_res << std::endl;
+}
+
+void Key::save_id_passwords()
+{
+    QString web_id = ui->lineEdit_webadress->text();
+    QString user_id = ui->lineEdit_web_id->text();
+    QString user_pass = ui->lineEdit_web_password->text();
+    qDebug()<< "Got web id: "<< web_id <<" User ID: "<< user_id <<" Password: "<< user_pass;
 }
