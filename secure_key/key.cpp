@@ -116,12 +116,12 @@ void Key::register_user()
     qDebug()<< "Entered Username:" << user_username;
     qDebug()<< "Entered Password:" << user_password;
 
-    if(user_username.length() < USERNAME_MIN_SIZE || \
-        user_password.length() < PASSWORD_MIN_SIZE){
+    if(user_username.length() < ENC_MIN_SIZE || \
+        user_password.length() < ENC_MIN_SIZE){
         ui->label_reg_info->setText("Username or Password too short!");
     }
-    else if(user_username.length() > USERNAME_MAX_SIZE || \
-               user_password.length() > PASSWORD_MAX_SIZE)
+    else if(user_username.length() > ENC_MAX_SIZE || \
+               user_password.length() > ENC_MAX_SIZE)
     {
         ui->label_reg_info->setText("Username or Password too big!");
     }
@@ -175,5 +175,36 @@ void Key::save_id_passwords()
     QString web_id = ui->lineEdit_webadress->text();
     QString user_id = ui->lineEdit_web_id->text();
     QString user_pass = ui->lineEdit_web_password->text();
-    qDebug()<< "Got web id: "<< web_id <<" User ID: "<< user_id <<" Password: "<< user_pass;
+    if(web_id.length() < ENC_MIN_SIZE || \
+            user_id.length() < ENC_MIN_SIZE || \
+            user_pass.length() < ENC_MIN_SIZE){
+        ui->label_reg_info->setText("Credentials too Short!");
+    }
+    else if(web_id.length() > ENC_MAX_SIZE || \
+            user_id.length() > ENC_MAX_SIZE || \
+            user_pass.length() > ENC_MAX_SIZE){
+        ui->label_reg_info->setText("Credentials too Big!");
+    }
+    else{
+        qDebug()<< "Got web id: "<< web_id <<" User ID: "<< user_id <<" Password: "<< user_pass;
+        std::string web_id_c_t= "",user_id_c_t = "", user_pass_c_t = "";
+        aes128.encryptAES(web_id.toStdString(), web_id_c_t);
+        aes128.encryptAES(user_id.toStdString(), user_id_c_t);
+        aes128.encryptAES(user_pass.toStdString(), user_pass_c_t);
+
+        QFile file(filename);
+        if (file.open(QIODevice::ReadWrite | QIODevice::Append)) {  // Lets add in the file
+            QTextStream out(&file);
+            out << "web_adress:"+ QString::fromUtf8(web_id_c_t.c_str()) + "\n";
+            out << "web_user_id:"+ QString::fromUtf8(user_id_c_t.c_str()) + "\n";
+            out << "web_user_pass:"+ QString::fromUtf8(user_id_c_t.c_str()) + "\n";
+            qDebug()<< "******* Saving completed *********";
+        }
+        file.flush();
+        file.close();
+        ui->label_show_save_password_status->setText("Password Saved!");
+        ui->lineEdit_webadress->clear();
+        ui->lineEdit_web_id->clear();
+        ui->lineEdit_web_password->clear();
+    }
 }

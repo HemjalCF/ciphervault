@@ -23,10 +23,8 @@ public:
 
 private:
     Ui::Key *ui;
-    #define USERNAME_MAX_SIZE 15
-    #define USERNAME_MIN_SIZE 6
-    #define PASSWORD_MAX_SIZE 15
-    #define PASSWORD_MIN_SIZE 6
+    #define ENC_MAX_SIZE 15
+    #define ENC_MIN_SIZE 6
 
     QString filename = "Data.txt";
     void check_login(void);

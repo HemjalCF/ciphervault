@@ -42,7 +42,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <property name="styleSheet">
@@ -625,6 +625,38 @@
         <string>Save</string>
        </property>
       </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_final">
+     <widget class="QTableWidget" name="tableWidget_list_all_passwords">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>561</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>SI</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Website</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Action</string>
+       </property>
+      </column>
      </widget>
     </widget>
    </widget>
