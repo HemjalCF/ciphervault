@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QClipboard>
 #include <iostream>
 #include <cstring>
 #include "aes128.hh"
@@ -33,7 +34,13 @@ private:
     void register_user(void);
     void test_aes128_algorithm(void);
 
+    void show_id_passwords_page(void);
     void save_id_passwords(void);
+
+    void show_final_page(void);
+    void set_uname_password(void);
+    void copy_id_passwords(void);
+    void copy_pass1(void);
 
     AES128 aes128;
 

@@ -13,12 +13,18 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
 
+
     //test_aes128_algorithm();
 
     // save webadress, id and pasword page
 
     connect(ui->pushButton_save, &QCommandLinkButton::clicked,this,&Key::save_id_passwords);
+    connect(ui->pushButton_add_new_pass_page, &QPushButton::clicked,this,&Key::show_id_passwords_page);
+    connect(ui->pushButton_goto_final_page, &QPushButton::clicked,this,&Key::show_final_page);
 
+    // copy password
+
+    connect(ui->pushButton_copy_pass1, &QPushButton::clicked,this,&Key::copy_id_passwords );
 
 }
 
@@ -89,7 +95,7 @@ void Key::check_login()
                 ui->label_info->setText("Verified user!");
                 ui->lineEdit_user_name_entered->clear();
                 ui->lineEdit_password_entered->clear();
-                ui->stackedWidget->setCurrentWidget(ui->page_save_password);
+                ui->stackedWidget->setCurrentWidget(ui->page_final);
             }
             else ui->label_info->setText("Wrong Password!");
         }
@@ -170,8 +176,30 @@ void Key::test_aes128_algorithm()
     std::cout << "D Text: " << de_res << std::endl;
 }
 
+void Key::show_id_passwords_page()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_save_password);
+}
+
 void Key::save_id_passwords()
 {
+    qDebug()<<"Testing ";
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+
+
+        int i=0;
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            qDebug()<<"found: "<<i<<" "<<line;
+        }
+        qDebug()<< "******* Reading completed *********";
+
+    file.close();
+
     QString web_id = ui->lineEdit_webadress->text();
     QString user_id = ui->lineEdit_web_id->text();
     QString user_pass = ui->lineEdit_web_password->text();
@@ -192,12 +220,11 @@ void Key::save_id_passwords()
         aes128.encryptAES(user_id.toStdString(), user_id_c_t);
         aes128.encryptAES(user_pass.toStdString(), user_pass_c_t);
 
-        QFile file(filename);
         if (file.open(QIODevice::ReadWrite | QIODevice::Append)) {  // Lets add in the file
-            QTextStream out(&file);
+            QTextStream out(&file);            
             out << "web_adress:"+ QString::fromUtf8(web_id_c_t.c_str()) + "\n";
             out << "web_user_id:"+ QString::fromUtf8(user_id_c_t.c_str()) + "\n";
-            out << "web_user_pass:"+ QString::fromUtf8(user_id_c_t.c_str()) + "\n";
+            out << "web_user_pass:"+ QString::fromUtf8(user_pass_c_t.c_str()) + "\n";
             qDebug()<< "******* Saving completed *********";
         }
         file.flush();
@@ -207,4 +234,110 @@ void Key::save_id_passwords()
         ui->lineEdit_web_id->clear();
         ui->lineEdit_web_password->clear();
     }
+}
+
+void Key::show_final_page()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_final);
+    set_uname_password();
+
+}
+
+void Key::set_uname_password()
+{
+    qDebug()<<"Testing: set user name and password ";
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+    QString web1_key_text = "web_adress";
+    QString usr1_key_text = "web_user_id";
+    QString pass1_key_text = "web_user_pass";
+
+
+    int i=1;
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if(line.indexOf(web1_key_text) != -1){
+            qDebug()<<"found: "<<i<<" "<<line;
+            QString web_addr_enc = line.mid(web1_key_text.size()+1);
+            std::string web_addr_dec = "";
+            aes128.decryptAES(web_addr_enc.toStdString(), web_addr_dec);
+            ui->label_web1->setText(QString::fromUtf8(web_addr_dec.c_str()));
+        }
+        else if(line.indexOf(usr1_key_text) != -1){
+            qDebug()<<"found: "<<i<<" "<<line;
+            QString web_usr_enc = line.mid(usr1_key_text.size()+1);
+            std::string web_usr_dec = "";
+            aes128.decryptAES(web_usr_enc.toStdString(), web_usr_dec);
+            ui->label_uid_1->setText(QString::fromUtf8(web_usr_dec.c_str()));
+        }
+        else if(line.indexOf(pass1_key_text) != -1){
+            qDebug()<<"found: "<<i<<" "<<line;
+            QString web_pass_enc = line.mid(pass1_key_text.size()+1);
+            std::string web_pass_dec = "";
+            aes128.decryptAES(web_pass_enc.toStdString(), web_pass_dec);
+            ui->label_pass1->setText(QString::fromUtf8(web_pass_dec.c_str()));
+        }
+    }
+    qDebug()<< "******* Displaying completed *********";
+    file.close();
+
+
+}
+
+void Key::copy_id_passwords(void)
+{
+    int pass_but = 0;
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString text_to_be_copied = "";
+    // ui->label_copy_status->setText("Copied!");
+    QObject* senderObj = sender();
+    if (senderObj->isWidgetType())
+    {
+        QPushButton* button = qobject_cast<QPushButton*>(senderObj);
+        qDebug()<<"Signal received from: "<<button->objectName();
+        if(QString::compare(button->objectName(), "pushButton_copy_pass1") == 0) pass_but = 1;
+        else if(QString::compare(button->objectName(), "pushButton_copy_pass1") == 0) pass_but = 1;
+        else if(QString::compare(button->objectName(), "pushButton_copy_pass2") == 0) pass_but = 2;
+        else if(QString::compare(button->objectName(), "pushButton_copy_pass3") == 0) pass_but = 3;
+        else if(QString::compare(button->objectName(), "pushButton_copy_pass4") == 0) pass_but = 4;
+        else if(QString::compare(button->objectName(), "pushButton_copy_pass5") == 0) pass_but = 5;
+    }
+
+    switch (pass_but) {
+    case 1:
+        qDebug()<<"Signal received from: button 1";
+        text_to_be_copied = ui->label_pass1->text();
+        break;
+    case 2:
+        qDebug()<<"Signal received from: button 2";
+        text_to_be_copied = ui->label_pass2->text();
+        break;
+    case 3:
+        qDebug()<<"Signal received from: button 3";
+        text_to_be_copied = ui->label_pass3->text();
+        break;
+    case 4:
+        qDebug()<<"Signal received from: button 4";
+        text_to_be_copied = ui->label_pass4->text();
+        break;
+    case 5:
+        qDebug()<<"Signal received from: button 5";
+        text_to_be_copied = ui->label_pass5->text();
+        break;
+
+    default:
+
+        break;
+    }
+
+    clipboard->setText(text_to_be_copied);
+
+}
+
+void Key::copy_pass1()
+{
+
 }
