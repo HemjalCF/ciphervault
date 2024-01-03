@@ -283,8 +283,6 @@ void Key::set_uname_password()
     }
     qDebug()<< "******* Displaying completed *********";
     file.close();
-
-
 }
 
 void Key::copy_id_passwords(void)
