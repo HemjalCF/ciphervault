@@ -95,6 +95,7 @@ void Key::check_login()
                 ui->label_info->setText("Verified user!");
                 ui->lineEdit_user_name_entered->clear();
                 ui->lineEdit_password_entered->clear();
+                set_uname_password();
                 ui->stackedWidget->setCurrentWidget(ui->page_final);
             }
             else ui->label_info->setText("Wrong Password!");
