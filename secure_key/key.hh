@@ -9,10 +9,14 @@
 #include <iostream>
 #include <cstring>
 #include "aes128.hh"
+#include <map>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Key; }
 QT_END_NAMESPACE
+
+
+typedef std::string webstr, id_str, pass_str;
 
 class Key : public QMainWindow
 {
@@ -28,6 +32,9 @@ private:
     #define ENC_MIN_SIZE 6
 
     QString filename = "Data.txt";
+
+    std::map<webstr,std::map<id_str,pass_str>> stored_ids;
+
     void check_login(void);
     void show_register_user_ui(void);
     void show_login_user_ui(void);
@@ -40,7 +47,6 @@ private:
     void show_final_page(void);
     void set_uname_password(void);
     void copy_id_passwords(void);
-    void copy_pass1(void);
 
     AES128 aes128;
 

@@ -25,6 +25,7 @@ Key::Key(QWidget *parent)
     // copy password
 
     connect(ui->pushButton_copy_pass1, &QPushButton::clicked,this,&Key::copy_id_passwords );
+    connect(ui->pushButton_logout, &QPushButton::clicked,this,&Key::show_login_user_ui);
 
 }
 
@@ -333,10 +334,5 @@ void Key::copy_id_passwords(void)
     }
 
     clipboard->setText(text_to_be_copied);
-
-}
-
-void Key::copy_pass1()
-{
 
 }

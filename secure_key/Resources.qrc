@@ -8,5 +8,7 @@
         <file>.gitignore</file>
         <file>to_left.png</file>
         <file>to_right.png</file>
+        <file>eye.png</file>
+        <file>logout.png</file>
     </qresource>
 </RCC>
