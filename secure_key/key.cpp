@@ -6,9 +6,9 @@ Key::Key(QWidget *parent)
     , ui(new Ui::Key)
 {
     ui->setupUi(this);
-    connect(ui->pushButton_login,&QPushButton::clicked,this,&Key::check_login);
-    connect(ui->pushButton_register, &QPushButton::clicked,this,&Key::show_register_user_ui);
-    connect(ui->pushButton_reg_insert, &QPushButton::clicked,this,&Key::register_user);
+    connect(ui->pushButton_login,&QPushButton::clicked,this,&Key::check_login);  // check for login info
+    connect(ui->pushButton_register, &QPushButton::clicked,this,&Key::show_register_user_ui); // show register user UI
+    connect(ui->pushButton_reg_insert, &QPushButton::clicked,this,&Key::register_user);       // register a user
     connect(ui->pushButton_goto_reg, &QPushButton::clicked,this,&Key::show_register_user_ui);
     connect(ui->pushButton_back_to_login, &QPushButton::clicked,this,&Key::show_login_user_ui);
     connect(ui->commandLinkButton_to_login, &QCommandLinkButton::clicked,this,&Key::show_login_user_ui);
@@ -35,12 +35,34 @@ Key::~Key()
     delete ui;
 }
 
+void Key::print_database(std::map<webstr,std::map<id_str,pass_str>> db)
+{
+    qDebug() << "Printing application database!";
+    if(db.empty()){
+        qDebug() << "Datbase Empty";
+        return;
+    }
+    else
+    {
+        qDebug() << "Total size: "<< db.size();
+        for (auto itr = db.begin(); itr != db.end(); ++itr) {
+            qDebug() << "User full name: "<< itr->first; // should contain key name
+            auto i_p = itr->second; // should contain saved id and password
+            for (auto uid_itr = i_p.begin(); uid_itr != i_p.end(); ++uid_itr) {
+                    qDebug() << "Username: "<<uid_itr->first;
+                    qDebug() << "Password: "<<uid_itr->second;
+            }
+        }
+    }
+}
+
 void Key::check_login()
 {
-    bool found_username = false, found_password = false;
+    bool found_user_f_name = false,found_username = false, found_password = false;
+    QString user_f_name_key_text = "userfullname:";
     QString username_key_text = "username:";
     QString password_key_text = "password:";
-    QString stored_username="",stored_password="";
+    QString stored_user_f_name="",stored_username="",stored_password="";
     QString username_entered = ui->lineEdit_user_name_entered->text();
     QString password_entered = ui->lineEdit_password_entered->text();
     qDebug()<<username_entered<<" and "<<password_entered;
@@ -53,8 +75,20 @@ void Key::check_login()
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
+        qsizetype found_u_f = line.lastIndexOf(user_f_name_key_text);
         qsizetype found_u = line.lastIndexOf(username_key_text);
         qsizetype found_p = line.lastIndexOf(password_key_text);
+        if(found_u_f != -1) {
+            stored_username= line.mid(user_f_name_key_text.size());
+            found_user_f_name = true;
+            std::string stored_user_f_name_c_t = stored_username.toStdString();
+            std::cout << "E Text: " << stored_user_f_name_c_t << std::endl;
+            std::string stored_user_f_name_p_t = "";
+            aes128.decryptAES(stored_user_f_name_c_t, stored_user_f_name_p_t);
+            std::cout << "D Text: " << stored_user_f_name_p_t << std::endl;
+            stored_user_f_name = QString::fromUtf8(stored_user_f_name_p_t.c_str());
+            qDebug() << stored_user_f_name;
+        }
         if(found_u != -1) {
             stored_username= line.mid(username_key_text.size());
             found_username = true;
@@ -75,8 +109,9 @@ void Key::check_login()
             aes128.decryptAES(stored_password_c_t, stored_password_p_t);
             stored_password = QString::fromUtf8(stored_password_p_t.c_str());
             qDebug() << stored_password;
+            uid[stored_user_f_name].emplace(stored_username,stored_password);
+            print_database(uid);
         }
-
         // qDebug()<<line;
     }
     file.close();
@@ -117,6 +152,7 @@ void Key::show_login_user_ui()
 
 void Key::register_user()
 {
+    QString full_name="",username="",password="";
     QString user_full_name = ui->lineEdit_full_name->text();
     QString user_username = ui->lineEdit_username->text();
     QString user_password = ui->lineEdit_password->text();
@@ -137,24 +173,29 @@ void Key::register_user()
         QFile file(filename);
         if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets remove evrything in the file
             QTextStream out(&file);
+            uid.clear(); // lets clear database first
             std::string u_f_name_p_t = user_full_name.toStdString();
             std::string u_f_name_c_t;
             aes128.encryptAES(u_f_name_p_t, u_f_name_c_t);
-            qDebug()<< "Saving: u f name: " << QString::fromUtf8(u_f_name_c_t.c_str());
-            out << "userfullname:"+ QString::fromUtf8(u_f_name_c_t.c_str()) + "\n";
+            full_name = QString::fromUtf8(u_f_name_c_t.c_str());
+            qDebug()<< "Saving: u f name: " << full_name;
+            out << "userfullname:"+ full_name + "\n";
 
             std::string u_name_p_t =  user_username.toStdString();
             std::string u_name_c_t;
             aes128.encryptAES(u_name_p_t, u_name_c_t);
-            qDebug()<< "Saving: u name: " << QString::fromUtf8(u_name_c_t.c_str());
-            out << "username:"+ QString::fromUtf8(u_name_c_t.c_str()) + "\n";
+            username = QString::fromUtf8(u_name_c_t.c_str());
+            qDebug()<< "Saving: u name: " << username;
+            out << "username:"+ username + "\n";
 
             std::string u_pass_p_t = user_password.toStdString();
             std::string u_pass_c_t;
             aes128.encryptAES(u_pass_p_t, u_pass_c_t);
-            qDebug()<< "Saving: u pass: " << QString::fromUtf8(u_pass_c_t.c_str());
-            out << "password:"+ QString::fromUtf8(u_pass_c_t.c_str()) + "\n";
-            qDebug()<< "******* Reg completed *********";
+            password = QString::fromUtf8(u_pass_c_t.c_str());
+            qDebug()<< "Saving: u pass: " << password;
+            out << "password:"+ password + "\n";
+            uid[full_name][username]= password;
+            qDebug()<< "******* Reg. completed *********";
         }
         file.flush();
         file.close();
@@ -185,20 +226,17 @@ void Key::show_id_passwords_page()
 
 void Key::save_id_passwords()
 {
-    qDebug()<<"Testing ";
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-
     QTextStream in(&file);
-
-
-        int i=0;
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            qDebug()<<"found: "<<i<<" "<<line;
-        }
-        qDebug()<< "******* Reading completed *********";
+    int i=0;
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        qDebug()<<"found ID: "<<i<<" "<<line;
+        i++;
+    }
+    qDebug()<< "******* Reading completed *********";
 
     file.close();
 
@@ -206,8 +244,8 @@ void Key::save_id_passwords()
     QString user_id = ui->lineEdit_web_id->text();
     QString user_pass = ui->lineEdit_web_password->text();
     if(web_id.length() < ENC_MIN_SIZE || \
-            user_id.length() < ENC_MIN_SIZE || \
-            user_pass.length() < ENC_MIN_SIZE){
+        user_id.length() < ENC_MIN_SIZE || \
+        user_pass.length() < ENC_MIN_SIZE){
         ui->label_reg_info->setText("Credentials too Short!");
     }
     else if(web_id.length() > ENC_MAX_SIZE || \
@@ -227,6 +265,7 @@ void Key::save_id_passwords()
             out << "web_adress:"+ QString::fromUtf8(web_id_c_t.c_str()) + "\n";
             out << "web_user_id:"+ QString::fromUtf8(user_id_c_t.c_str()) + "\n";
             out << "web_user_pass:"+ QString::fromUtf8(user_pass_c_t.c_str()) + "\n";
+            wids[web_id][user_id] = user_pass;
             qDebug()<< "******* Saving completed *********";
         }
         file.flush();
@@ -242,7 +281,6 @@ void Key::show_final_page()
 {
     ui->stackedWidget->setCurrentWidget(ui->page_final);
     set_uname_password();
-
 }
 
 void Key::set_uname_password()
@@ -256,7 +294,6 @@ void Key::set_uname_password()
     QString web1_key_text = "web_adress";
     QString usr1_key_text = "web_user_id";
     QString pass1_key_text = "web_user_pass";
-
 
     int i=1;
     while (!in.atEnd()) {
@@ -282,6 +319,7 @@ void Key::set_uname_password()
             aes128.decryptAES(web_pass_enc.toStdString(), web_pass_dec);
             ui->label_pass1->setText(QString::fromUtf8(web_pass_dec.c_str()));
         }
+        i++;
     }
     qDebug()<< "******* Displaying completed *********";
     file.close();
@@ -299,7 +337,6 @@ void Key::copy_id_passwords(void)
         QPushButton* button = qobject_cast<QPushButton*>(senderObj);
         qDebug()<<"Signal received from: "<<button->objectName();
         if(QString::compare(button->objectName(), "pushButton_copy_pass1") == 0) pass_but = 1;
-        else if(QString::compare(button->objectName(), "pushButton_copy_pass1") == 0) pass_but = 1;
         else if(QString::compare(button->objectName(), "pushButton_copy_pass2") == 0) pass_but = 2;
         else if(QString::compare(button->objectName(), "pushButton_copy_pass3") == 0) pass_but = 3;
         else if(QString::compare(button->objectName(), "pushButton_copy_pass4") == 0) pass_but = 4;
@@ -332,7 +369,5 @@ void Key::copy_id_passwords(void)
 
         break;
     }
-
     clipboard->setText(text_to_be_copied);
-
 }
