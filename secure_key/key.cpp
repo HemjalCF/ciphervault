@@ -25,6 +25,10 @@ Key::Key(QWidget *parent)
     // copy password
 
     connect(ui->pushButton_copy_pass1, &QPushButton::clicked,this,&Key::copy_id_passwords );
+    connect(ui->pushButton_copy_pass2, &QPushButton::clicked,this,&Key::copy_id_passwords );
+    connect(ui->pushButton_copy_pass3, &QPushButton::clicked,this,&Key::copy_id_passwords );
+    connect(ui->pushButton_copy_pass4, &QPushButton::clicked,this,&Key::copy_id_passwords );
+    connect(ui->pushButton_copy_pass5, &QPushButton::clicked,this,&Key::copy_id_passwords );
     connect(ui->pushButton_logout, &QPushButton::clicked,this,&Key::show_login_user_ui);
 
 }
@@ -226,6 +230,10 @@ void Key::show_id_passwords_page()
 
 void Key::save_id_passwords()
 {
+    if(wids.size()>5){
+        ui->label_show_save_password_status->setText("No storage left!");
+        return;
+    }
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -243,6 +251,7 @@ void Key::save_id_passwords()
     QString web_id = ui->lineEdit_webadress->text();
     QString user_id = ui->lineEdit_web_id->text();
     QString user_pass = ui->lineEdit_web_password->text();
+
     if(web_id.length() < ENC_MIN_SIZE || \
         user_id.length() < ENC_MIN_SIZE || \
         user_pass.length() < ENC_MIN_SIZE){
@@ -294,6 +303,7 @@ void Key::set_uname_password()
     QString web1_key_text = "web_adress";
     QString usr1_key_text = "web_user_id";
     QString pass1_key_text = "web_user_pass";
+    QString web_addr="", web_id ="", web_pass ="";
 
     int i=1;
     while (!in.atEnd()) {
@@ -303,23 +313,66 @@ void Key::set_uname_password()
             QString web_addr_enc = line.mid(web1_key_text.size()+1);
             std::string web_addr_dec = "";
             aes128.decryptAES(web_addr_enc.toStdString(), web_addr_dec);
-            ui->label_web1->setText(QString::fromUtf8(web_addr_dec.c_str()));
+            web_addr = QString::fromUtf8(web_addr_dec.c_str());
+           // ui->label_web1->setText(web_addr);
         }
         else if(line.indexOf(usr1_key_text) != -1){
             qDebug()<<"found: "<<i<<" "<<line;
             QString web_usr_enc = line.mid(usr1_key_text.size()+1);
             std::string web_usr_dec = "";
             aes128.decryptAES(web_usr_enc.toStdString(), web_usr_dec);
-            ui->label_uid_1->setText(QString::fromUtf8(web_usr_dec.c_str()));
+            web_id = QString::fromUtf8(web_usr_dec.c_str());
+            //ui->label_uid_1->setText(web_id);
         }
         else if(line.indexOf(pass1_key_text) != -1){
             qDebug()<<"found: "<<i<<" "<<line;
             QString web_pass_enc = line.mid(pass1_key_text.size()+1);
             std::string web_pass_dec = "";
             aes128.decryptAES(web_pass_enc.toStdString(), web_pass_dec);
-            ui->label_pass1->setText(QString::fromUtf8(web_pass_dec.c_str()));
+            web_pass = QString::fromUtf8(web_pass_dec.c_str());
+            //ui->label_pass1->setText(web_pass);
+            wids[web_addr][web_id] = web_pass;
         }
         i++;
+    }
+    print_database(wids);
+    int j=1;
+    for (auto wid_itr = wids.begin(); wid_itr != wids.end(); ++wid_itr) {
+        auto ids_m = wid_itr->second;
+        for (auto uid_itr = ids_m.begin(); uid_itr != ids_m.end(); ++uid_itr) {
+            auto id =uid_itr->first;
+            auto pass = uid_itr->second;
+            switch (j) {
+            case 1:
+                ui->label_web1->setText(wid_itr->first);
+                ui->label_uid_1->setText(id);
+                ui->label_pass1->setText(pass);
+                break;
+            case 2:
+                ui->label_web2->setText(wid_itr->first);
+                ui->label_uid_2->setText(id);
+                ui->label_pass2->setText(pass);
+                break;
+            case 3:
+                ui->label_web3->setText(wid_itr->first);
+                ui->label_uid_3->setText(id);
+                ui->label_pass3->setText(pass);
+                break;
+            case 4:
+                ui->label_web4->setText(wid_itr->first);
+                ui->label_uid_4->setText(id);
+                ui->label_pass4->setText(pass);
+                break;
+            case 5:
+                ui->label_web5->setText(wid_itr->first);
+                ui->label_uid_5->setText(id);
+                ui->label_pass5->setText(pass);
+                break;
+            default:
+                break;
+            }
+        }
+        j++;
     }
     qDebug()<< "******* Displaying completed *********";
     file.close();
