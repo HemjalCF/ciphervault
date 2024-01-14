@@ -29,6 +29,14 @@ Key::Key(QWidget *parent)
     connect(ui->pushButton_copy_pass3, &QPushButton::clicked,this,&Key::copy_id_passwords );
     connect(ui->pushButton_copy_pass4, &QPushButton::clicked,this,&Key::copy_id_passwords );
     connect(ui->pushButton_copy_pass5, &QPushButton::clicked,this,&Key::copy_id_passwords );
+
+    // delete password
+    connect(ui->pushButton_delete_pass_1, &QPushButton::clicked,this,&Key::delete_id_passwords);
+    connect(ui->pushButton_delete_pass_2, &QPushButton::clicked,this,&Key::delete_id_passwords);
+    connect(ui->pushButton_delete_pass_3, &QPushButton::clicked,this,&Key::delete_id_passwords);
+    connect(ui->pushButton_delete_pass_4, &QPushButton::clicked,this,&Key::delete_id_passwords);
+    connect(ui->pushButton_delete_pass_5, &QPushButton::clicked,this,&Key::delete_id_passwords);
+
     connect(ui->pushButton_logout, &QPushButton::clicked,this,&Key::show_login_user_ui);
 
 }
@@ -62,7 +70,7 @@ void Key::print_database(std::map<webstr,std::map<id_str,pass_str>> db)
 
 void Key::check_login()
 {
-    bool found_user_f_name = false,found_username = false, found_password = false;
+    bool found_username = false, found_password = false;
     QString user_f_name_key_text = "userfullname:";
     QString username_key_text = "username:";
     QString password_key_text = "password:";
@@ -84,7 +92,7 @@ void Key::check_login()
         qsizetype found_p = line.lastIndexOf(password_key_text);
         if(found_u_f != -1) {
             stored_username= line.mid(user_f_name_key_text.size());
-            found_user_f_name = true;
+            //found_user_f_name = true;
             std::string stored_user_f_name_c_t = stored_username.toStdString();
             std::cout << "E Text: " << stored_user_f_name_c_t << std::endl;
             std::string stored_user_f_name_p_t = "";
@@ -417,10 +425,85 @@ void Key::copy_id_passwords(void)
         qDebug()<<"Signal received from: button 5";
         text_to_be_copied = ui->label_pass5->text();
         break;
-
     default:
-
         break;
     }
     clipboard->setText(text_to_be_copied);
+}
+
+bool Key::remove_credential(QString target_id){
+    bool res = false;
+    std::list<QString> ids_in_file;
+    qDebug()<<"Deleting Target web id: "<< target_id;
+    QString web1_key_text = "web_adress";
+
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return res;
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        ids_in_file.push_back(line);
+    }
+    size_t size = ids_in_file.size();
+    size_t j =0;
+    for (auto it = ids_in_file.begin(); it != ids_in_file.end(); ++it){
+        j++;
+        QString line = *it;
+        QString web_addr = "";
+        if(line.indexOf(web1_key_text) != -1){
+            QString web_addr_enc = line.mid(web1_key_text.size()+1);
+            std::string web_addr_dec = "";
+            aes128.decryptAES(web_addr_enc.toStdString(), web_addr_dec);
+            web_addr = QString::fromUtf8(web_addr_dec.c_str());
+            if(web_addr == target_id){
+                it++;
+                it++;
+                j=j+2;
+            }
+        }
+        if(j<size) qDebug()<< *it;
+    }
+    return res;
+}
+void Key::delete_id_passwords()
+{
+    int delete_but = 0;
+    QObject* senderObj = sender();
+    if (senderObj->isWidgetType())
+    {
+        QPushButton* button = qobject_cast<QPushButton*>(senderObj);
+        qDebug()<<"Signal received from: "<<button->objectName();
+        if(QString::compare(button->objectName(), "pushButton_delete_pass_1") == 0) delete_but = 1;
+        else if(QString::compare(button->objectName(), "pushButton_delete_pass_2") == 0) delete_but = 2;
+        else if(QString::compare(button->objectName(), "pushButton_delete_pass_3") == 0) delete_but = 3;
+        else if(QString::compare(button->objectName(), "pushButton_delete_pass_4") == 0) delete_but = 4;
+        else if(QString::compare(button->objectName(), "pushButton_delete_pass_5") == 0) delete_but = 5;
+    }
+
+    switch (delete_but) {
+    case 1:
+        qDebug()<<"Delete Signal received from: button 1";
+        remove_credential(ui->label_web1->text());
+        break;
+    case 2:
+        qDebug()<<"Delete Signal received from: button 2";
+        remove_credential(ui->label_web2->text());
+        break;
+    case 3:
+        qDebug()<<"Delete Signal received from: button 3";
+
+        break;
+    case 4:
+        qDebug()<<"Delete Signal received from: button 4";
+
+        break;
+    case 5:
+        qDebug()<<"Delete Signal received from: button 5";
+
+        break;
+    default:
+        break;
+    }
+qDebug()<<"Deleting Tarrree";
 }

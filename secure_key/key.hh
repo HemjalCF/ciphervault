@@ -51,6 +51,8 @@ private:
     void show_final_page(void);
     void set_uname_password(void);
     void copy_id_passwords(void);
+    bool remove_credential(QString target_id);
+    void delete_id_passwords(void);
 
     AES128 aes128;
 

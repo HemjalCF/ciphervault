@@ -42,7 +42,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <property name="styleSheet">
@@ -737,7 +737,7 @@
        <rect>
         <x>280</x>
         <y>120</y>
-        <width>61</width>
+        <width>41</width>
         <height>16</height>
        </rect>
       </property>
@@ -758,7 +758,7 @@
        <string>copy</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_delete_pass1">
+     <widget class="QPushButton" name="pushButton_delete_pass_1">
       <property name="geometry">
        <rect>
         <x>520</x>
@@ -802,7 +802,7 @@
        <rect>
         <x>280</x>
         <y>160</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -821,19 +821,6 @@
       </property>
       <property name="text">
        <string>copy</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_pass2">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>150</y>
-        <width>89</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Delete</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_23">
@@ -862,25 +849,12 @@
        <string>copy</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_6">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>190</y>
-        <width>89</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Delete</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_pass3">
       <property name="geometry">
        <rect>
         <x>280</x>
         <y>200</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -927,25 +901,12 @@
        <string>copy</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_8">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>230</y>
-        <width>89</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Delete</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_pass4">
       <property name="geometry">
        <rect>
         <x>280</x>
         <y>240</y>
-        <width>51</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -992,25 +953,12 @@
        <string>copy</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_10">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>270</y>
-        <width>89</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Delete</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_pass5">
       <property name="geometry">
        <rect>
         <x>280</x>
         <y>280</y>
-        <width>51</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1120,7 +1068,7 @@
        <rect>
         <x>200</x>
         <y>120</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1133,7 +1081,7 @@
        <rect>
         <x>200</x>
         <y>160</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1146,7 +1094,7 @@
        <rect>
         <x>200</x>
         <y>200</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1159,7 +1107,7 @@
        <rect>
         <x>200</x>
         <y>240</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1172,7 +1120,7 @@
        <rect>
         <x>200</x>
         <y>280</y>
-        <width>67</width>
+        <width>41</width>
         <height>17</height>
        </rect>
       </property>
@@ -1334,6 +1282,58 @@
         <width>30</width>
         <height>30</height>
        </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_delete_pass_2">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>150</y>
+        <width>89</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_delete_pass_3">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>190</y>
+        <width>89</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_delete_pass_4">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>230</y>
+        <width>89</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_delete_pass_5">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>270</y>
+        <width>89</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
       </property>
      </widget>
     </widget>
