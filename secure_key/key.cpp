@@ -58,7 +58,7 @@ void Key::print_database(std::map<webstr,std::map<id_str,pass_str>> db)
     {
         qDebug() << "Total size: "<< db.size();
         for (auto itr = db.begin(); itr != db.end(); ++itr) {
-            qDebug() << "User full name: "<< itr->first; // should contain key name
+            qDebug() << "User/web name: "<< itr->first; // should contain key name
             auto i_p = itr->second; // should contain saved id and password
             for (auto uid_itr = i_p.begin(); uid_itr != i_p.end(); ++uid_itr) {
                     qDebug() << "Username: "<<uid_itr->first;
@@ -302,7 +302,6 @@ void Key::show_final_page()
 
 void Key::set_uname_password()
 {
-    qDebug()<<"Testing: set user name and password ";
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -445,10 +444,9 @@ bool Key::remove_credential(QString target_id){
         QString line = in.readLine();
         ids_in_file.push_back(line);
     }
-    size_t size = ids_in_file.size();
-    size_t j =0;
+    std::list<webstr> new_credentials;
     for (auto it = ids_in_file.begin(); it != ids_in_file.end(); ++it){
-        j++;
+
         QString line = *it;
         QString web_addr = "";
         if(line.indexOf(web1_key_text) != -1){
@@ -457,18 +455,30 @@ bool Key::remove_credential(QString target_id){
             aes128.decryptAES(web_addr_enc.toStdString(), web_addr_dec);
             web_addr = QString::fromUtf8(web_addr_dec.c_str());
             if(web_addr == target_id){
-                it++;
-                it++;
-                j=j+2;
+                it++;          // skip id
+                it++;          // skip password
+                continue;
             }
         }
-        if(j<size) qDebug()<< *it;
+        qDebug()<< *it;
+        new_credentials.push_back(*it);  // store credentials in a new list
+    }
+    file.close();
+    if (file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {  // Lets add in the file
+        QTextStream out(&file);
+        for (auto it = new_credentials.begin(); it != new_credentials.end(); ++it)
+            out << *it+ "\n";
+        file.flush();
+        file.close();
+        qDebug()<< "******* Saving completed *********";
+        return true;
     }
     return res;
 }
 void Key::delete_id_passwords()
 {
     int delete_but = 0;
+    bool delete_status = false;
     QObject* senderObj = sender();
     if (senderObj->isWidgetType())
     {
@@ -484,26 +494,27 @@ void Key::delete_id_passwords()
     switch (delete_but) {
     case 1:
         qDebug()<<"Delete Signal received from: button 1";
-        remove_credential(ui->label_web1->text());
+        delete_status = remove_credential(ui->label_web1->text());
         break;
     case 2:
         qDebug()<<"Delete Signal received from: button 2";
-        remove_credential(ui->label_web2->text());
+        delete_status = remove_credential(ui->label_web2->text());
         break;
     case 3:
         qDebug()<<"Delete Signal received from: button 3";
-
+        delete_status = remove_credential(ui->label_web3->text());
         break;
     case 4:
         qDebug()<<"Delete Signal received from: button 4";
-
+        delete_status = remove_credential(ui->label_web4->text());
         break;
     case 5:
         qDebug()<<"Delete Signal received from: button 5";
-
+        delete_status = remove_credential(ui->label_web5->text());
         break;
     default:
         break;
     }
-qDebug()<<"Deleting Tarrree";
+    if(delete_status) qDebug()<<"Deleting completed";
+    else qDebug()<<"Deleting Operation failed!";
 }
