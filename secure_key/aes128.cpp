@@ -29,9 +29,12 @@ void AES128::encryptAES(const std::string plaintext, std::string &ciphertext)
 {
     AES_KEY aesKey;
     AES_set_encrypt_key(cypher_key, 128, &aesKey);
-    unsigned char plain_text_char[plaintext.length()+1];
+    unsigned char plain_text_char[16];
    // std::cout <<"Size "<< plaintext.length() <<" and "<<sizeof(plain_text_char)<< '\n';
-    str_to_char(plaintext,plain_text_char);
+    std::string u_pass_p_t_raw = plaintext;
+    std::string u_pass_p_t = "ääääääääääääääää";
+    u_pass_p_t = u_pass_p_t.replace(0,u_pass_p_t_raw.length(),u_pass_p_t_raw);
+    str_to_char(u_pass_p_t,plain_text_char);
     unsigned char ciphertext_c[AES_BLOCK_SIZE];
     AES_encrypt(plain_text_char, ciphertext_c, &aesKey);
     std::stringstream ss;

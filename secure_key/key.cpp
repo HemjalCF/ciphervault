@@ -222,7 +222,7 @@ void Key::register_user()
 
 void Key::test_aes128_algorithm()
 {
-    std::string test = "Test x";
+    std::string test = "dsdhfdfhsääääääää";
     std::string res="";
     aes128.encryptAES(test,res);
     std::cout << "E Text: "<<res<<std::endl;
@@ -470,7 +470,8 @@ bool Key::remove_credential(QString target_id){
             out << *it+ "\n";
         file.flush();
         file.close();
-        qDebug()<< "******* Saving completed *********";
+        qDebug()<< "******* Deleting completed *********";
+        set_uname_password();
         return true;
     }
     return res;
